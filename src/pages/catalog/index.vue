@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <div class="cataList">
-        <a :href="'/pages/articleDetails/main?id='+item._id" class="listOne" v-for="(item,index) in cataLists" :key="index">
+        <a :href="'/pages/articleDetails/main?id='+ item._id + '&bookId=' + bookId" class="listOne" v-for="(item,index) in cataLists" :key="index">
           {{item.title}}
         </a>
       </div>

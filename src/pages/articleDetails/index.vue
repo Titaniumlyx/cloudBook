@@ -5,7 +5,7 @@
       </div>
       <div class="iconWrap">
         <div class="icon">
-          <img src="/static/imgs/1left.png">
+          <img src="/static/imgs/1left.png" @click="handleLast">
         </div>
         <div class="icon">
           <img src="/static/imgs/1catalog.png">
@@ -16,7 +16,7 @@
         <div class="icon ASmall" @click="handleSmallWord">
           <img src="/static/imgs/1A-.png">
         </div>
-        <div class="icon">
+        <div class="icon" @click="handleNext">
           <img src="/static/imgs/1right.png">
         </div>
       </div>
@@ -37,16 +37,19 @@
       return{
         articleId: '',
         articleCon: {},
+        cataLists: [],
         sizeValue: 100,
+        index: 0,
         fontSize: ''
       }
     },
     methods: {
-      getContent(){
-        axios.get(`/article/${this.articleId}`).then(res => {
-          // console.log(res);
-          this.articleCon = res.data
-        })
+      async getContent(){
+        let articleCon = await axios.get(`/article/${this.articleId}`);
+        let cataLists = await axios.get(`/titles/${this.$root.$mp.query.bookId}`);
+        this.articleCon = articleCon.data;
+        this.cataLists = cataLists.data;
+        this.index = this.cataLists.findIndex(item => item._id === this.articleId)
       },
       handleAddWord(){
         this.sizeValue = this.sizeValue + 2;
@@ -55,6 +58,29 @@
       handleSmallWord(){
         this.sizeValue = this.sizeValue - 2;
         this.fontSize = `font-size: ${this.sizeValue}%`
+      },
+      handleLast(){
+        // console.log(this.cataLists);
+        if(!this.cataLists[this.index - 1]){
+          wx.showToast({ title: '已经是第一章了' })
+        }else{
+          axios.get(`/article/${this.cataLists[this.index - 1]._id}`).then(res => {
+            console.log(res);
+            this.articleCon = res.data;
+            this.index--
+          })
+        }
+      },
+      handleNext(){
+        if(!this.cataLists[this.index + 1]){
+          wx.showToast({ title: '这是最后一章' })
+        }else{
+          axios.get(`/article/${this.cataLists[this.index + 1]._id}`).then(res => {
+              console.log(res);
+              this.articleCon = res.data;
+              this.index++
+            })
+        }
       }
     },
     onLoad(options) {
@@ -69,7 +95,7 @@
         imageUrl: this.bookMsg.img
       }
     }
-  };
+  }
 </script>
 <!--// find()函数用来查找目标元素，找到就返回该元素，找不到返回undefined。-->
 <!--// findIndex()函数也是查找目标元素，找到就返回第一个元素的索引位置，找不到就返回-1-->
