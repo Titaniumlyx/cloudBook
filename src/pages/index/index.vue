@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import { axios } from "@/utils/index.js"
+  import { axios } from "@/utils/index"
 
   export default {
     data() {
@@ -62,7 +62,7 @@
 
     methods: {
       getSwiper() {
-        axios.post("/swiper").then(res => {
+        axios.get("/swiper").then(res => {
           // console.log(res);
           this.imgsUrl = res.data;
         });

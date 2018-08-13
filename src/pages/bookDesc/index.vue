@@ -1,50 +1,57 @@
 <template>
   <div class="container">
+    <img src="/static/imgs/Wedges-3.7s-200px.svg" v-if="isLoading" class="svg-loading">
     <!--顶部-->
-    <div class="bookTop">
-      <div class="bookImg">
-        <img :src="bookMsg.img">
+    <div v-if="!isLoading">
+      <div class="bookTop">
+        <div class="bookImg">
+          <img :src="bookMsg.img">
+        </div>
+        <div class="bookInfor">
+          <div class="title">{{bookMsg.title}}</div>
+          <div class="author one">作者：{{bookMsg.author}}</div>
+          <div class="lookNum one">{{bookMsg.looknums}}人在看</div>
+          <div class="likeNum one">{{bookMsg.startsnums}}人喜欢</div>
+        </div>
       </div>
-      <div class="bookInfor">
-        <div class="title">{{bookMsg.title}}</div>
-        <div class="author one">作者：{{bookMsg.author}}</div>
-        <div class="lookNum one">{{bookMsg.looknums}}人在看</div>
-        <div class="likeNum one">{{bookMsg.startsnums}}人喜欢</div>
+      <!--分享-->
+      <div class="collect">
+        <button class="collectBtn">加入收藏</button>
+        <button class="collectBtn" open-type="share">分享好友</button>
+        <button class="collectBtn" @click="handleShare">分享朋友圈</button>
+      </div>
+      <!--简介-->
+      <div class="summary">
+        <div class="summaryT">简介</div>
+        <div class="summaryContent">
+          {{bookMsg.desc}}
+        </div>
+      </div>
+      <!--目录-->
+      <div class="catalog" @click="handleRead">
+        <div class="catalog2">
+          <span class="check">查看目录</span>
+          <span>共{{chapterNum}}章</span>
+        </div>
+        <div class="renew">更新于两天前 ></div>
+      </div>
+      <!--阅读-->
+      <div class="readBook">
+        <button @click="handleRead">阅读该书籍</button>
       </div>
     </div>
-    <!--分享-->
-    <div class="collect">
-      <button class="collectBtn">加入收藏</button>
-      <button class="collectBtn" open-type="share">分享好友</button>
-      <button class="collectBtn" @click="handleShare">分享朋友圈</button>
-    </div>
-    <!--简介-->
-    <div class="summary">
-      <div class="summaryT">简介</div>
-      <div class="summaryContent">
-        {{bookMsg.desc}}
-      </div>
-    </div>
-    <!--目录-->
-    <div class="catalog" @click="handleRead">
-      <div class="catalog2">
-        <span class="check">查看目录</span>
-        <span>共{{chapterNum}}章</span>
-      </div>
-      <div class="renew">更新于两天前 ></div>
-    </div>
-    <!--阅读-->
-    <div class="readBook">
-      <button @click="handleRead">阅读该书籍</button>
-    </div>
-
   </div>
 </template>
 
 <script>
   import { axios } from "@/utils/index.js";
+  import { mapState } from 'vuex';
 
   export default {
+    computed: {
+      // 使用对象展开运算符将此对象混入到外部对象中
+      ...mapState(['isLoading'])
+    },
     data() {
       return {
         bookId: '',
@@ -54,10 +61,14 @@
     },
     methods: {
       getBookDesc(){
+        this.bookMsg = {};
+        this.chapterNum = 0;
         axios.get(`/book/${this.bookId}`).then(res => {
           // console.log(res);
           this.bookMsg = res.data;
           this.chapterNum = res.length;
+        }).catch(err => {
+          console.log(err);
         })
       },
       handleShare(){
@@ -101,6 +112,17 @@
   .container{
     width: 710rpx;
     margin: 0 auto;
+  }
+  .svg-loading{
+    display: block;
+    width: 200rpx;
+    height: 200rpx;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
   .bookTop {
     padding-bottom: 10px;

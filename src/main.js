@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import App from './App'
 import './main.css'
+import { axios } from '@/utils/index'
+import store from './store'
+
+Vue.prototype.$axios = axios
+Vue.prototype.$store = store
 
 Vue.config.productionTip = false
 App.mpType = 'app'

@@ -1,28 +1,30 @@
 <template>
     <div class="container">
-      <div v-if="articleCon.title" :style="fontSize" class="articleCon">
-        <wemark :md="articleCon.article.content" link :highlight="true"></wemark>
-      </div>
-      <div class="iconWrap">
-        <div class="icon">
-          <img src="/static/imgs/1left.png" @click="handleLast">
+      <!--<img src="/static/imgs/Wedges-3.7s-200px.svg" v-if="isLoading" class="svg-loading">-->
+      <div v-if="!isLoading">
+        <div v-if="articleCon.title" :style="fontSize" class="articleCon">
+          <wemark :md="articleCon.article.content" link :highlight="true" type="rich-text"></wemark>
         </div>
-        <div class="icon">
-          <img src="/static/imgs/1catalog.png" @click="handleChange">
+        <div class="iconWrap">
+          <div class="icon">
+            <img src="/static/imgs/1left.png" @click="handleLast">
+          </div>
+          <div class="icon">
+            <img src="/static/imgs/1catalog.png" @click="handleShow">
+          </div>
+          <div class="icon ALargen" @click="handleAddWord">
+            <img src="/static/imgs/1A+.png">
+          </div>
+          <div class="icon ASmall" @click="handleSmallWord">
+            <img src="/static/imgs/1A-.png">
+          </div>
+          <div class="icon" @click="handleNext">
+            <img src="/static/imgs/1right.png">
+          </div>
         </div>
-        <div class="icon ALargen" @click="handleAddWord">
-          <img src="/static/imgs/1A+.png">
-        </div>
-        <div class="icon ASmall" @click="handleSmallWord">
-          <img src="/static/imgs/1A-.png">
-        </div>
-        <div class="icon" @click="handleNext">
-          <img src="/static/imgs/1right.png">
-        </div>
-      </div>
-      <!--目录盒子-->
-      <div class="cateWrap" v-show = "isShow" @click="handleNothing">
-        <scroll-view class="cateBlock" :scroll-y="true" :style="{transform: 'translateX(' + trans + ')'}" @click.stop="">
+        <!--目录盒子-->
+        <div class="cateWrap" v-show = "isShow" @click="handleNothing"></div>
+        <scroll-view class="cateBlock" :scroll-y="true" :style="{transform: 'translateX(' + trans + ')'}">
           <div class="itemOne" v-for="(item,index) in cataLists" :key="index" @click="getClickArt(item._id)" :style="item._id == articleId? 'background: #A5A0A0' : ''">{{item.title}}</div>
         </scroll-view>
       </div>
@@ -30,10 +32,14 @@
 </template>
 
 <script>
-  import { axios } from "@/utils/index.js";
+  import { axios,loading } from "@/utils/index";
+  import { mapState } from 'vuex'
 
   export default {
-    name: "index",
+    computed: {
+      // 使用对象展开运算符将此对象混入到外部对象中
+      ...mapState(['isLoading'])
+    },
     data(){
       return{
         articleId: '',
@@ -43,11 +49,17 @@
         index: 0,
         fontSize: '',
         isShow: false,
-        trans: ''
+        trans: 0
       }
     },
     methods: {
+      initNone(){
+        this.articleCon = {}
+      },
       async getContent(){
+        this.handleNothing();
+        this.initNone();
+        loading.show();
         let articleCon = await axios.get(`/article/${this.articleId}`);
         let cataLists = await axios.get(`/titles/${this.$root.$mp.query.bookId}`);
         this.articleCon = articleCon.data;
@@ -64,10 +76,13 @@
         this.fontSize = `font-size: ${this.sizeValue}%`
       },
       handleLast(){
+        this.handleNothing();
         // console.log(this.cataLists);
         if(!this.cataLists[this.index - 1]){
           wx.showToast({ title: '已经是第一章了' })
         }else{
+          loading.show();
+          this.initNone();
           axios.get(`/article/${this.cataLists[this.index - 1]._id}`).then(res => {
             // console.log(res);
             this.articleCon = res.data;
@@ -78,9 +93,12 @@
         }
       },
       handleNext(){
+        this.handleNothing();
         if(!this.cataLists[this.index + 1]){
           wx.showToast({ title: '这是最后一章' })
         }else{
+          loading.show();
+          this.initNone();
           axios.get(`/article/${this.cataLists[this.index + 1]._id}`).then(res => {
               // console.log(res);
               this.articleCon = res.data;
@@ -92,17 +110,16 @@
       },
       handleNothing(){
         this.isShow = false;
+        this.trans = '-600rpx';
       },
-      handleChange(){
-        this.isShow = !this.isShow;
-        if(this.isShow){
-          this.trans = 0;
-        }else{
-          this.trans = '-600rpx'
-        }
+      handleShow(){
+        this.isShow = true;
+        this.trans = 0;
       },
       getClickArt(val){
-        this.handleChange();
+        this.handleNothing();
+        loading.show();
+        this.initNone();
         axios.get(`/article/${val}`).then(res => {
           this.articleCon = res.data;
           this.articleId = val;
@@ -131,6 +148,17 @@
 <!--// 通过 this.$root.$mp.query 进行获取小程序在 page onLoad 时候传递的 options。-->
 <!--// 使用this.$root.$mp.query获取参数需要在mounted中获取，在created中会报Cannot read property 'query' of undefined-->
 <style scoped lang="scss">
+  .svg-loading{
+    display: block;
+    width: 200rpx;
+    height: 200rpx;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
   .articleCon{
     width: 710rpx;
     margin: 0 auto;
@@ -159,14 +187,14 @@
     }
   }
   .cateWrap{
-    width: 20%;
-    height: 100%;
+    /*width: 20%;*/
+    /*height: 100%;*/
     background: rgba(64,64,64,.5);
     position: fixed;
     top: 0;
     bottom: 0;
     right: 0;
-    /*left: 0;*/
+    left: 0;
     z-index: 8;
     /*animation: moveBig linear .5s;*/
   }
@@ -185,7 +213,7 @@
     bottom: 0;
     left: 0;
     z-index: 10;
-    transition: transform 3s linear;
+    transition: transform .5s linear;
     /*animation: moveSmall linear .5s;*/
     .itemOne{
       border-bottom: 1px solid #f1f1f1;
