@@ -18,20 +18,28 @@
 //   return `${t1} ${t2}`;
 // }
 import store from '@/store';
-const baseUrl = "http://m.yaojunrong.com";
+const baseUrl = "https://m.yaojunrong.com";
 
 export const axios = {
   get(url, data) {
+    let token = wx.getStorageSync('token')
+    let header = {
+      'content-type': 'application/json'
+    }
+    if(token){
+      header.token = token
+    }
     return new Promise((resolve, reject) => {
       store.commit('setIsLoading', true);
       wx.request({
         url: baseUrl + url,
         method: "GET",
         data,
-        header: {
-          'content-type': 'application/json'
-        },
+        header,
         success(res) {
+          if(res.header.Token){
+            wx.setStorageSync('token', res.header.Token)
+          }
           store.commit('setIsLoading', false);
           wx.hideLoading();
           resolve(res.data);
@@ -45,14 +53,23 @@ export const axios = {
     });
   },
   post(url, data) {
+    let token = wx.getStorageSync('token')
+    let header = {
+      'content-type': 'application/json'
+    }
+    if(token){
+      header.token = token
+    }
     return new Promise((resolve, reject) => {
       wx.request({
         url: baseUrl + url,
         method: "POST",
-        header: {
-          'content-type': 'application/json'
-        },
+        data,
+        header,
         success(res) {
+          if(res.header.Token){
+            wx.setStorageSync('token', res.header.Token)
+          }
           resolve(res.data);
         },
         error(err) {
@@ -60,7 +77,23 @@ export const axios = {
         }
       });
     });
-  }
+  },
+  // login () {
+  //   const self = this
+  //   return new Promise((resolve, reject) => {
+  //     wx.login({
+  //       success (data) {
+  //         self.post('/login', {code: data.code}).then(res => {
+  //           resolve(res)
+  //         })
+  //       },
+  //       error (err) {
+  //         reject(err)
+  //       }
+  //     })
+  //   })
+  //
+  // }
 };
 
 export const loading = {
@@ -74,7 +107,7 @@ export const loading = {
   }
 }
 
-export default {
-  axios,
-  loading
-};
+// export default {
+//   axios,
+//   loading
+// };

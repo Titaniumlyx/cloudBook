@@ -3,9 +3,11 @@ import App from './App'
 import './main.css'
 import { axios } from '@/utils/index'
 import store from './store'
+import { fetch } from '@/utils/fetch'
 
 Vue.prototype.$axios = axios
 Vue.prototype.$store = store
+Vue.prototype.$fetch = fetch
 
 Vue.config.productionTip = false
 App.mpType = 'app'
@@ -23,6 +25,27 @@ export default {
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
-    }
+    },
+    tabBar: {
+      color: '#515151',
+      selectedColor: '#1296db',
+      borderStyle: '#686969',
+      list: [{
+        pagePath: "pages/index/main",
+        text: "首页",
+        iconPath: '/static/imgs/index.png',
+        selectedIconPath: '/static/imgs/index-active.png'
+      }, {
+        pagePath: "pages/myBook/main",
+        text: "我的阅读",
+        iconPath: '/static/imgs/myRead.png',
+        selectedIconPath: '/static/imgs/myRead-active.png'
+      },{
+        pagePath: "pages/personalCenter/main",
+        text: "个人中心",
+        iconPath: '/static/imgs/my.png',
+        selectedIconPath: '/static/imgs/my-active.png'
+      }]
+    },
   }
 }

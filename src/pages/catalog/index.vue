@@ -21,6 +21,7 @@
     },
     methods: {
       getCatalog(){
+        this.cataLists = {}
         axios.get(`/titles/${this.bookId}`).then(res => {
           // console.log(res);
           this.cataLists = res.data
