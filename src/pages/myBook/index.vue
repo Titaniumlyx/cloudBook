@@ -60,7 +60,7 @@
         //   console.log(thisVue);
         // })
         this.$fetch.get('/readList', {}, (res) => {
-          console.log(res);
+          // console.log(res);
           this.oldBooks = res.data.map(item => {
             item.percent = Math.ceil(item.title.index / item.title.total * 100)
             return item

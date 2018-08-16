@@ -66,6 +66,13 @@ export const login = () => {
           secret: 'ed9775efe18f6028d53b835d3ebb53b5'
         }, function(data) {
           console.log(data);
+          if(data.code === 200){
+            wx.showToast({
+              title: data.msg,
+              icon: 'success',
+              duration: 1000
+            })
+          }
           resolve(data)
         })
       }

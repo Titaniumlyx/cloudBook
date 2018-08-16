@@ -16,7 +16,7 @@
       </div>
       <!--分享-->
       <div class="collect">
-        <button class="collectBtn">加入收藏</button>
+        <button class="collectBtn" @click="handleCollect" :disabled="isCollected">{{isCollected ? '已收藏' : '添加收藏'}}</button>
         <button class="collectBtn" open-type="share">分享好友</button>
         <button class="collectBtn" @click="handleShare">分享朋友圈</button>
       </div>
@@ -56,7 +56,8 @@
       return {
         bookId: '',
         bookMsg: {},
-        chapterNum: ''
+        chapterNum: '',
+        isCollected: false
       };
     },
     methods: {
@@ -66,9 +67,32 @@
         axios.get(`/book/${this.bookId}`).then(res => {
           // console.log(res);
           this.bookMsg = res.data;
+          this.isCollected = res.isCollect === 1;
           this.chapterNum = res.length;
         }).catch(err => {
           console.log(err);
+        })
+      },
+      handleCollect(){
+        let params = {
+          bookId: this.bookId
+        }
+        axios.post('/collection',params).then(res => {
+          console.log(res);
+          if(res.code === 200){
+            wx.showToast({
+              title: res.msg,
+              icon: 'success',
+              duration: 1000
+            })
+            this.isCollected = 1;
+          }else{
+            wx.showToast({
+              title: res.msg,
+              icon: 'warning',
+              duration: 1500
+            })
+          }
         })
       },
       handleShare(){
@@ -98,7 +122,7 @@
     },
     //与open-type="share" 搭配使用，return里显示分享的内容
     onShareAppMessage(obj){
-      console.log(obj);
+      // console.log(obj);
       return{
         title: this.bookMsg.title,
         path: `/pages/bookDesc/main?id=${this.bookId}`,
