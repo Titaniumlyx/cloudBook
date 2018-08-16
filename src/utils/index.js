@@ -61,6 +61,7 @@ export const axios = {
       header.token = token
     }
     return new Promise((resolve, reject) => {
+      store.commit('setIsLoading', true);
       wx.request({
         url: baseUrl + url,
         method: "POST",
@@ -70,6 +71,7 @@ export const axios = {
           if(res.header.Token){
             wx.setStorageSync('token', res.header.Token)
           }
+          store.commit('setIsLoading', false);
           resolve(res.data);
         },
         error(err) {

@@ -1,5 +1,6 @@
 // 另一个ajax的封装，两者有所同有所异
 const baseUrl = "https://m.yaojunrong.com"
+// import store from '@/store'
 
 export const fetch = {
   get(url, data, cb){   // cb: callback,回调函数，可代替写promise
@@ -10,6 +11,7 @@ export const fetch = {
     if(token){
       header.token = token
     }
+    // store.commit('setIsLoading', true);
     wx.request({
       url: baseUrl + url,
       method: 'GET',
@@ -19,6 +21,7 @@ export const fetch = {
         if(res.header.Token){
           wx.setStorageSync('token', res.header.Token)
         }
+        // store.commit('setIsLoading', false);
         cb(res.data);
       }
     })
@@ -31,6 +34,7 @@ export const fetch = {
     if(token){
       header.token = token
     }
+    // store.commit('setIsLoading', true);
     wx.request({
       url: baseUrl + url,
       method: 'POST',
@@ -41,6 +45,7 @@ export const fetch = {
         if(res.header.Token){
           wx.setStorageSync('token', res.header.Token)
         }
+        // store.commit('setIsLoading', false);
         cb(res.data);
       }
     })

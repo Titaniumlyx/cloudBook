@@ -1,0 +1,49 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.myContainer{
+}
+.myBlock{
+  background: mediumspringgreen;
+  display: flex;
+  justify-content: center;
+  .myTop{
+    padding-top: 30rpx;
+    width: 700rpx;
+    display: flex;
+    flex-direction: column;
+    .myInfor{
+      height: 160rpx;
+      display: flex;
+      justify-content: flex-start;
+      .myPic{
+        width: 120rpx;
+        height: 120rpx;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      .myName{
+        color: #fff;
+        font-size: 22px;
+        margin-left: 30rpx;
+        line-height: 120rpx;
+      }
+    }
+    .topItems{
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      .it{
+        display: flex;
+        flex-direction: column;
+        color: #3F4323;
+        font-size: 16px;
+        .num{
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
