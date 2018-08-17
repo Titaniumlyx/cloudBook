@@ -93,7 +93,7 @@
       },
       getcollectNum(){
         this.$axios.get('/collection').then(res => {
-          console.log(res);
+          // console.log(res);
           this.collectBooks = res.data
         })
       }
