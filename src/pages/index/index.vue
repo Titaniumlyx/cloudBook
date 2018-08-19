@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!--<test></test>-->
     <!--轮播图-->
     <div class="swiper">
       <swiper indicator-dots="true" autoplay="true" interval="3000" duration="500">
@@ -51,8 +52,12 @@
 
 <script>
   import { axios } from "@/utils/index"
+  // import test from '../../components/test'
 
   export default {
+    // components: {
+    //   test
+    // },
     data() {
       return {
         imgsUrl: [],
@@ -79,6 +84,12 @@
       // 调用应用实例的方法获取全局数据
       this.getSwiper();
       this.getCategory();
+    },
+    onShareAppMessage () {
+      return {
+        title: '云书',
+        path: '/pages/index/main'
+      }
     }
   };
 </script>

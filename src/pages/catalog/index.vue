@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-      <div class="cataList">
+      <img src="/static/imgs/Wedges-3.7s-200px.svg" v-if="isLoading" class="svg-loading">
+      <div class="cataList" v-if="!isLoading">
         <a :href="'/pages/articleDetails/main?id='+ item._id + '&bookId=' + bookId" class="listOne" v-for="(item,index) in cataLists" :key="index">
           {{item.title}}
         </a>
@@ -9,10 +10,13 @@
 </template>
 
 <script>
-  import { axios } from "@/utils/index.js";
+  import { axios } from "@/utils/index"
+  import { mapState } from 'vuex'
 
   export default {
-    name: "index",
+    computed: {
+      ...mapState(['isLoading'])
+    },
     data(){
       return{
         bookId: '',
@@ -32,6 +36,12 @@
       // console.log(options); 获取点击书本的id
       this.bookId = options.id;
       this.getCatalog()
+    },
+    onShareAppMessage () {
+      return {
+        title: this.cataLists[0].title,
+        path: '/pages/catalog/main?id=' + this.bookId
+      }
     }
   }
 </script>
@@ -40,6 +50,17 @@
   .container{
     width: 710rpx;
     margin: 0 auto;
+  }
+  .svg-loading{
+    display: block;
+    width: 200rpx;
+    height: 200rpx;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
   .listOne{
     height: 66rpx;

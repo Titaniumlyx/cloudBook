@@ -31,6 +31,9 @@
           </div>
         </div>
       </div>
+      <div class="word">
+        <span>——没有了，去看几本好书吧——</span>
+      </div>
     </div>
   </div>
 </template>
@@ -80,6 +83,12 @@
     },
     onShow(){
       this.getOldBook()
+    },
+    onShareAppMessage () {
+      return {
+        title: '我的观看',
+        path: '/pages/myBook/main'
+      }
     }
   };
 </script>

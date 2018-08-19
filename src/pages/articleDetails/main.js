@@ -9,6 +9,6 @@ export default {
     usingComponents: {
       wemark: '/static/wemark/wemark'
     },
-    navigationBarTitleText: '文章详情'
+    navigationBarTitleText: ''
   }
 }

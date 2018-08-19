@@ -87,11 +87,16 @@
             })
             this.isCollected = 1;
           }else{
-            wx.showToast({
-              title: res.msg,
-              icon: 'warning',
-              duration: 1500
-            })
+            if(res.code === 401){
+              wx.switchTab({
+                url: '/pages/personalCenter/main'
+              })
+              wx.showToast({
+                title: res.msg,
+                icon: 'warning',
+                duration: 1500
+              })
+            }
           }
         })
       },

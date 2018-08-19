@@ -2,10 +2,10 @@
   <div class="myContainer">
     <img src="/static/imgs/Wedges-3.7s-200px.svg" v-if="isLoading" class="svg-loading">
     <div v-if="!isLoading">
-      <div class="loginBtn" v-show="!isLogin">
+      <div class="loginBtn" v-if="!isLogin">
         <button @click="login" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button>
       </div>
-      <div class="myBlock" v-show="isLogin">
+      <div class="myBlock" v-if="isLogin">
         <div class="myTop">
           <div class="myInfor">
             <div class="myPic"><open-data type="userAvatarUrl"></open-data></div>
@@ -46,7 +46,7 @@
         collectBooks: []
       }
     },
-    onLoad: function() {
+    onShow() {
       // 查看是否授权
       let self = this;
       wx.getSetting({
@@ -56,12 +56,17 @@
             self.isLogin = true;
             wx.getUserInfo({
               success: function(res) {
+                self.isLogin = true;
                 // console.log(res.userInfo)
               }
             })
           }
+        },
+        fail(){
+          self.isLogin = false;
         }
       })
+      this.getcollectNum();
     },
     bindGetUserInfo: function(e) {
       console.log(e.detail.userInfo)
@@ -69,6 +74,8 @@
     methods: {
       login(){
         login()
+
+        // this.isLogin = true;
         // wx.login({
         //   success: function(res) {
         //     // console.log(res);
@@ -115,8 +122,19 @@
       //   // })
       // },
     },
-    onShow(){
-      this.getcollectNum();
+    // onShow(){
+    //   this.getcollectNum();
+    // },
+    // onLoad(){
+    //   wx.reLaunch({
+    //     url: 'pages/personalCenter/main'
+    //   })
+    // },
+    onShareAppMessage () {
+      return {
+        title: '我的个人中心页',
+        path: '/pages/personalCenter/main'
+      }
     }
   }
 </script>

@@ -3,6 +3,17 @@
   padding: 0;
 }
 .myContainer{
+  .svg-loading{
+    display: block;
+    width: 200rpx;
+    height: 200rpx;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
 }
 .myBlock{
   background: mediumspringgreen;

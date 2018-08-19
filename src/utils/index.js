@@ -75,6 +75,7 @@ export const axios = {
           resolve(res.data);
         },
         error(err) {
+          store.commit('setIsLoading', false);
           reject(err);
         }
       });
@@ -109,7 +110,3 @@ export const loading = {
   }
 }
 
-// export default {
-//   axios,
-//   loading
-// };

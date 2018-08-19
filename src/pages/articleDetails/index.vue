@@ -45,11 +45,12 @@
         articleId: '',
         articleCon: {},
         cataLists: [],
-        sizeValue: 100,
+        sizeValue: 125,
         index: 0,
         fontSize: '',
         isShow: false,
-        trans: 0
+        trans: 0,
+        title:''
       }
     },
     methods: {
@@ -63,9 +64,20 @@
         let articleCon = await axios.get(`/article/${this.articleId}`);
         let cataLists = await axios.get(`/titles/${this.$root.$mp.query.bookId}`);
         this.articleCon = articleCon.data;
-        // console.log(articleCon.data);
         this.cataLists = cataLists.data;
+        // console.log(this.articleCon.title);
         this.index = this.cataLists.findIndex(item => item._id === this.articleId)
+        // wx.setNavigationBarTitle({
+        //   title: this.articleCon.title
+        // })
+      },
+      getBarTitle(){
+        this.getContent().then(() => {    //async函数返回的是一个promise对象
+          wx.setNavigationBarTitle({
+            title: this.articleCon.title
+          })
+        })
+        // console.log(this.articleCon.title);
       },
       handleAddWord(){
         this.sizeValue = this.sizeValue + 2;
@@ -129,7 +141,8 @@
     },
     onLoad(options) {
       this.articleId = options.id;
-      this.getContent()
+      this.getContent();
+      this.getBarTitle()
     },
     onShareAppMessage(obj){
       // console.log(obj);
@@ -138,6 +151,9 @@
         path: '/pages/articleDetails/main?id=' + this.articleId,
         // imageUrl: this.bookMsg.img
       }
+    },
+    onShow(){
+      this.fontSize = `font-size: ${this.sizeValue}%`;
     }
   }
 </script>
@@ -213,7 +229,7 @@
     bottom: 0;
     left: 0;
     z-index: 10;
-    transition: transform .5s linear;
+    transition: transform .3s linear;
     /*animation: moveSmall linear .5s;*/
     .itemOne{
       border-bottom: 1px solid #f1f1f1;

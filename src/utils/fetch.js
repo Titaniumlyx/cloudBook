@@ -1,6 +1,6 @@
 // 另一个ajax的封装，两者有所同有所异
 const baseUrl = "https://m.yaojunrong.com"
-// import store from '@/store'
+import store from '@/store'
 
 export const fetch = {
   get(url, data, cb){   // cb: callback,回调函数，可代替写promise
@@ -11,7 +11,7 @@ export const fetch = {
     if(token){
       header.token = token
     }
-    // store.commit('setIsLoading', true);
+    store.commit('setIsLoading', true);
     wx.request({
       url: baseUrl + url,
       method: 'GET',
@@ -21,8 +21,12 @@ export const fetch = {
         if(res.header.Token){
           wx.setStorageSync('token', res.header.Token)
         }
-        // store.commit('setIsLoading', false);
+        store.commit('setIsLoading', false);
         cb(res.data);
+      },
+      error(err){
+        store.commit('setIsLoading', false)
+        cb(err)
       }
     })
   },
@@ -34,7 +38,7 @@ export const fetch = {
     if(token){
       header.token = token
     }
-    // store.commit('setIsLoading', true);
+    store.commit('setIsLoading', true);
     wx.request({
       url: baseUrl + url,
       method: 'POST',
@@ -45,19 +49,14 @@ export const fetch = {
         if(res.header.Token){
           wx.setStorageSync('token', res.header.Token)
         }
-        // store.commit('setIsLoading', false);
+        store.commit('setIsLoading', false);
         cb(res.data);
+      },
+      error(err){
+        store.commit('setIsLoading', false)
+        cb(err)
       }
     })
-    // wx.request({
-    //   url: baseUrl + url,
-    //   header,
-    //   method: 'POST',
-    //   data,
-    //   success (res) {
-    //     cb(res.data)
-    //   }
-    // })
   }
 }
 
@@ -71,12 +70,19 @@ export const login = () => {
           secret: 'ed9775efe18f6028d53b835d3ebb53b5'
         }, function(data) {
           console.log(data);
+          wx.reLaunch({
+            url: '/pages/personalCenter/main'
+          })
+          wx.reLaunch({
+            url: '/pages/personalCenter/main'
+          })
           if(data.code === 200){
-            wx.showToast({
-              title: data.msg,
-              icon: 'success',
-              duration: 1000
-            })
+
+            // wx.showToast({
+            //   title: data.msg,
+            //   icon: 'success',
+            //   duration: 1000
+            // })
           }
           resolve(data)
         })
