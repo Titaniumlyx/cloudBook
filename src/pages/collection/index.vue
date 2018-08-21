@@ -37,18 +37,19 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  // import { mapState } from 'vuex'
 
   export default {
-    computed: {
-      ...mapState(['isLoading'])
-    },
+    // computed: {
+    //   ...mapState(['isLoading'])
+    // },
     data(){
       return{
         collectBooks: [],
         arr: [],
         pn: 1,
-        isOver: false
+        isOver: false,
+        isLoading: true
       }
     },
     methods: {
@@ -56,18 +57,22 @@
         this.$axios.get('/collection',{pn: this.pn, size: 4}
         ).then(res => {
           // console.log(res);
-          this.arr = res.data;
+          this.isLoading = false
           if(res.data.length === 0){
             this.isOver = true;
           }
-          this.collectBooks = [...this.collectBooks,...this.arr]
+          else{
+            this.arr = res.data;
+            this.collectBooks = [...this.collectBooks,...this.arr]
+          }
         })
       }
     },
     onReachBottom(){
+      this.isLoading = false
       if(!this.isOver){
         console.log('加载更多...')
-        this.pn += 1
+        this.pn += 1;
         this.getCollectionBook()
       }
     },

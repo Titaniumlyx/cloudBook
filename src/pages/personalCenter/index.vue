@@ -56,28 +56,30 @@
         userInfors: ''
       }
     },
-    // onLoad() {
-    //   // 查看是否授权
-    //   let self = this;
-    //   wx.getSetting({
-    //     success: function(res){
-    //       if (res.authSetting['scope.userInfo']) {
-    //         // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //         self.isLogin = true;
-    //         wx.getUserInfo({
-    //           success: function(res) {
-    //             self.isLogin = true;
-    //             // console.log(res.userInfo)
-    //           }
-    //         })
-    //       }
-    //     },
-    //     fail(){
-    //       self.isLogin = false;
-    //     }
-    //   })
-    //
-    // },
+    onShow() {
+      // 查看是否授权
+      let self = this;
+      wx.getSetting({
+        success: function(res){
+          if (res.authSetting['scope.userInfo']) {
+            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+            self.isLogin = true;
+            wx.getUserInfo({
+              success: function(res) {
+                self.isLogin = true;
+                console.log(res)
+                self.userInfors = res.userInfo
+                self.getcollectNum();
+                // console.log(res.userInfo)
+              }
+            })
+          }
+        },
+        fail(){
+          self.isLogin = false;
+        }
+      })
+    },
     methods: {
       getcollectNum(){
         let self = this;
@@ -100,27 +102,6 @@
           })
         }
       },
-      // login(){
-      //
-      //
-      //   // this.isLogin = true;
-      //   // wx.login({
-      //   //   success: function(res) {
-      //   //     // console.log(res);
-      //   //       wx.request({  // 发起网络请求
-      //   //         url: 'https://m.yaojunrong.com/login',
-      //   //         method: 'POST',
-      //   //         header: {
-      //   //           'content-type': 'application/json'
-      //   //         },
-      //   //         success (data) {
-      //   //           console.log(data);
-      //   //           wx.setStorageSync('token', data.header.Token)
-      //   //         }
-      //   //       })
-      //   //   }
-      //   // });
-      // },
       inCollect(){
         wx.navigateTo({
           url: '/pages/collection/main'
@@ -144,9 +125,6 @@
       //   // })
       // },
     },
-    // onShow(){
-    //   this.getcollectNum();
-    // },
     onShareAppMessage () {
       return {
         title: '我的个人中心页',
