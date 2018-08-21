@@ -29,7 +29,7 @@
           </div>
         </a>
       </div>
-      <div class="word">
+      <div class="word" v-if="isOver">
         <span>——没有更多了，发现好书去收藏吧——</span>
       </div>
     </div>
@@ -46,14 +46,29 @@
     data(){
       return{
         collectBooks: [],
+        arr: [],
+        pn: 1,
+        isOver: false
       }
     },
     methods: {
       getCollectionBook(){
-        this.$axios.get('/collection').then(res => {
+        this.$axios.get('/collection',{pn: this.pn, size: 4}
+        ).then(res => {
           // console.log(res);
-          this.collectBooks = res.data
+          this.arr = res.data;
+          if(res.data.length === 0){
+            this.isOver = true;
+          }
+          this.collectBooks = [...this.collectBooks,...this.arr]
         })
+      }
+    },
+    onReachBottom(){
+      if(!this.isOver){
+        console.log('加载更多...')
+        this.pn += 1
+        this.getCollectionBook()
       }
     },
     onShow(){
@@ -94,7 +109,7 @@
     .bookItem {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 15px;
+      margin-bottom: 25px;
       .bookPic {
         width: 200rpx;
         height: 125px;

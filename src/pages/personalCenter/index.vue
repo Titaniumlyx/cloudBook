@@ -3,13 +3,22 @@
     <img src="/static/imgs/Wedges-3.7s-200px.svg" v-if="isLoading" class="svg-loading">
     <div v-if="!isLoading">
       <div class="loginBtn" v-if="!isLogin">
-        <button @click="login" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button>
+        <button
+          open-type="getUserInfo"
+          @getuserinfo="bindGetUserInfo"
+        >授权登录</button>
       </div>
       <div class="myBlock" v-if="isLogin">
         <div class="myTop">
           <div class="myInfor">
-            <div class="myPic"><open-data type="userAvatarUrl"></open-data></div>
-            <div class="myName"><open-data type="userNickName"></open-data></div>
+            <div class="myPic">
+              <!--<open-data type="userAvatarUrl"></open-data>-->
+              <img :src="userInfors.avatarUrl">
+            </div>
+            <div class="myName">
+              <!--<open-data type="userNickName"></open-data>-->
+              <span>{{userInfors.nickName}}</span>
+            </div>
           </div>
           <div class="topItems">
             <div class="collect it" @click="inCollect">
@@ -43,67 +52,80 @@
     data(){
       return{
         isLogin: false,
-        collectBooks: []
+        collectBooks: [],
+        userInfors: ''
       }
     },
-    onShow() {
-      // 查看是否授权
-      let self = this;
-      wx.getSetting({
-        success: function(res){
-          if (res.authSetting['scope.userInfo']) {
-            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-            self.isLogin = true;
-            wx.getUserInfo({
-              success: function(res) {
-                self.isLogin = true;
-                // console.log(res.userInfo)
-              }
-            })
-          }
-        },
-        fail(){
-          self.isLogin = false;
-        }
-      })
-      this.getcollectNum();
-    },
-    bindGetUserInfo: function(e) {
-      console.log(e.detail.userInfo)
-    },
+    // onLoad() {
+    //   // 查看是否授权
+    //   let self = this;
+    //   wx.getSetting({
+    //     success: function(res){
+    //       if (res.authSetting['scope.userInfo']) {
+    //         // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+    //         self.isLogin = true;
+    //         wx.getUserInfo({
+    //           success: function(res) {
+    //             self.isLogin = true;
+    //             // console.log(res.userInfo)
+    //           }
+    //         })
+    //       }
+    //     },
+    //     fail(){
+    //       self.isLogin = false;
+    //     }
+    //   })
+    //
+    // },
     methods: {
-      login(){
-        login()
-
-        // this.isLogin = true;
-        // wx.login({
-        //   success: function(res) {
-        //     // console.log(res);
-        //       wx.request({  // 发起网络请求
-        //         url: 'https://m.yaojunrong.com/login',
-        //         method: 'POST',
-        //         header: {
-        //           'content-type': 'application/json'
-        //         },
-        //         success (data) {
-        //           console.log(data);
-        //           wx.setStorageSync('token', data.header.Token)
-        //         }
-        //       })
-        //   }
-        // });
+      getcollectNum(){
+        let self = this;
+        this.$fetch.get('/collection',{},function(res){
+          // console.log(res);
+          self.collectBooks = res.data
+        })
       },
+      bindGetUserInfo: function(e) {
+        // console.log(e)
+        if(e.mp.detail.errMsg === 'getUserInfo:ok'){
+          this.userInfors = e.target.userInfo
+          login().then(() => {
+            this.getcollectNum();
+            this.isLogin = true;
+          })
+        }else{
+          wx.showToast({
+            title: '授权失败'
+          })
+        }
+      },
+      // login(){
+      //
+      //
+      //   // this.isLogin = true;
+      //   // wx.login({
+      //   //   success: function(res) {
+      //   //     // console.log(res);
+      //   //       wx.request({  // 发起网络请求
+      //   //         url: 'https://m.yaojunrong.com/login',
+      //   //         method: 'POST',
+      //   //         header: {
+      //   //           'content-type': 'application/json'
+      //   //         },
+      //   //         success (data) {
+      //   //           console.log(data);
+      //   //           wx.setStorageSync('token', data.header.Token)
+      //   //         }
+      //   //       })
+      //   //   }
+      //   // });
+      // },
       inCollect(){
         wx.navigateTo({
           url: '/pages/collection/main'
         })
       },
-      getcollectNum(){
-        this.$axios.get('/collection').then(res => {
-          // console.log(res);
-          this.collectBooks = res.data
-        })
-      }
       // getDatas(){
       //   this.$fetch.get('/readList', {}, function(res) {
       //     console.log(res);   //取得读过的数据    因为用的是cb 所以没有.then
@@ -124,11 +146,6 @@
     },
     // onShow(){
     //   this.getcollectNum();
-    // },
-    // onLoad(){
-    //   wx.reLaunch({
-    //     url: 'pages/personalCenter/main'
-    //   })
     // },
     onShareAppMessage () {
       return {
