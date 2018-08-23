@@ -101,6 +101,9 @@
             this.articleId = this.cataLists[this.index - 1]._id;
             this.index = this.cataLists.findIndex(item => item._id === this.cataLists[this.index - 1]._id)
             // this.index--;
+            wx.setNavigationBarTitle({
+              title: this.articleCon.title
+            })
           })
         }
       },
@@ -117,6 +120,9 @@
               this.articleId = this.cataLists[this.index + 1]._id;
               this.index = this.cataLists.findIndex(item => item._id === this.cataLists[this.index + 1]._id);
               // this.index++;
+              wx.setNavigationBarTitle({
+                title: this.articleCon.title
+              })
             })
         }
       },

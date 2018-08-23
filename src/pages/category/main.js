@@ -7,6 +7,6 @@ app.$mount()
 export default {
   config: {
     navigationBarTitleText: '图书分类',
-    onReachBottomDistance: 60
+    onReachBottomDistance: 80
   }
 }
