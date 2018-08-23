@@ -37,7 +37,9 @@
             <div class="bookBottom">
               <span>{{val.author}}</span>
               <div class="numInfor">
-                <span>{{val.startsnums}}天前</span>
+                <span>
+                  <getTime :time="val.updateTime"></getTime>
+                </span>
                 <span>{{item.title}}</span>
                 <span>{{val.looknums}}人在看</span>
               </div>
@@ -52,12 +54,12 @@
 
 <script>
   import { axios } from "@/utils/index"
-  // import test from '../../components/test'
+  import getTime from '../../components/getTime'
 
   export default {
-    // components: {
-    //   test
-    // },
+    components: {
+      getTime
+    },
     data() {
       return {
         imgsUrl: [],
@@ -161,6 +163,8 @@
           font-size: 12px;
           color: #666;
           .numInfor {
+            display: flex;
+            justify-content: space-between;
             span {
               margin-left: 5px;
             }

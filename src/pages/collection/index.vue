@@ -20,7 +20,9 @@
               <div class="bookBottom">
                 <span>{{item.book.author}}</span>
                 <div class="numInfor">
-                  <span>{{item.book.startsnums}}天前</span>
+                  <span>
+                    <getTime :time="item.book.updateTime"></getTime>
+                  </span>
                   <!--<span>{{item.title}}</span>-->
                   <span>{{item.book.looknums}}人在看</span>
                 </div>
@@ -37,12 +39,16 @@
 </template>
 
 <script>
+  import getTime from '../../components/getTime'
   // import { mapState } from 'vuex'
 
   export default {
     // computed: {
     //   ...mapState(['isLoading'])
     // },
+    components: {
+      getTime
+    },
     data(){
       return{
         collectBooks: [],
@@ -148,6 +154,8 @@
           font-size: 12px;
           color: #666;
           .numInfor {
+            display: flex;
+            justify-content: space-between;
             span {
               margin-left: 5px;
             }
