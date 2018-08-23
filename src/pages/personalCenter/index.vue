@@ -67,10 +67,9 @@
             wx.getUserInfo({
               success: function(res) {
                 self.isLogin = true;
-                console.log(res)
+                // console.log(res)
                 self.userInfors = res.userInfo
                 self.getcollectNum();
-                // console.log(res.userInfo)
               }
             })
           }

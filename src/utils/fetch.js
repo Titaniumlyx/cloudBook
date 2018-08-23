@@ -25,7 +25,7 @@ export const fetch = {
         store.commit('setIsLoading', false);
         cb(res.data);
       },
-      error(err){
+      fail(err){
         store.commit('setIsLoading', false)
         cb(err)
       }
@@ -53,7 +53,7 @@ export const fetch = {
         store.commit('setIsLoading', false);
         cb(res.data);
       },
-      error(err){
+      fail(err){
         store.commit('setIsLoading', false)
         cb(err)
       }

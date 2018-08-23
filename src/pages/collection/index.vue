@@ -71,7 +71,7 @@
     onReachBottom(){
       this.isLoading = false
       if(!this.isOver){
-        console.log('加载更多...')
+        // console.log('加载更多...')
         this.pn += 1;
         this.getCollectionBook()
       }

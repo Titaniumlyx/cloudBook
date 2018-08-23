@@ -35,11 +35,16 @@ export default {
         text: "首页",
         iconPath: '/static/imgs/index.png',
         selectedIconPath: '/static/imgs/index-active.png'
-      }, {
+      },{
         pagePath: "pages/myBook/main",
         text: "我的阅读",
         iconPath: '/static/imgs/myRead.png',
         selectedIconPath: '/static/imgs/myRead-active.png'
+      },{
+        pagePath: "pages/category/main",
+        text: "书城",
+        iconPath: '/static/imgs/allBooks.png',
+        selectedIconPath: '/static/imgs/allBooks-active.png'
       },{
         pagePath: "pages/personalCenter/main",
         text: "个人中心",
