@@ -83,6 +83,9 @@
       }
     },
     onShow(){
+      this.isOver = false
+      this.collectBooks = []
+      this.pn = 1
       this.getCollectionBook()
     },
     onShareAppMessage () {
